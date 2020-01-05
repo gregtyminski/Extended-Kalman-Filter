@@ -1,5 +1,6 @@
 #include "kalman_filter.h"
 #include <math.h>
+#include <iostream>
 
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
@@ -8,7 +9,6 @@ using Eigen::VectorXd;
  * Please note that the Eigen library does not initialize 
  *   VectorXd or MatrixXd objects with zeros upon creation.
  */
-
 KalmanFilter::KalmanFilter() {}
 
 KalmanFilter::~KalmanFilter() {}
@@ -30,18 +30,12 @@ void KalmanFilter::Predict() {
 }
 
 void KalmanFilter::Update(const VectorXd &z) {
-    /**
-    * TODO: update the state by using Kalman Filter equations
-    */
     VectorXd z_pred = H_ * x_;
     VectorXd y = z - z_pred;
     CalculateUpdate(y);
 }
 
 void KalmanFilter::UpdateEKF(const VectorXd &z) {
-    /**
-    * TODO: update the state by using Extended Kalman Filter equations
-    */
     float px = x_(0);
     float py = x_(1);
     float vx = x_(2);

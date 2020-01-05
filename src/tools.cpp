@@ -68,8 +68,8 @@ VectorXd Tools::Polar2Cartesian(const MeasurementPackage &measurement_pack) {
     double phi = measurement_pack.raw_measurements_[1]; // bearing
     double rho_dot = measurement_pack.raw_measurements_[2]; // velocity
 
-    double x = Tools::verifyZero(rho * cos(phi));
-    double y = Tools::verifyZero(rho * sin(phi));
+    double x = verifyZero(rho * cos(phi));
+    double y = verifyZero(rho * sin(phi));
 
     double vx = rho_dot * cos(phi);
     double vy = rho_dot * sin(phi);

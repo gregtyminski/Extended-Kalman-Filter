@@ -65,19 +65,25 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
         ekf_.x_ = VectorXd(4);
         ekf_.x_ << 1, 1, 1, 1;
 
+        ekf_.P_ = MatrixXd(4,4);
+
         if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {
             // TODO: Convert radar from polar to cartesian coordinates
             //         and initialize state.
             cout << "EKF init RADAR" << endl;
             ekf_.x_ = tools.Polar2Cartesian(measurement_pack);
-
+            ekf_.H_ = tools.CalculateJacobian(ekf_.x_);
+            ekf_.R_ = R_radar_;
         } else if (measurement_pack.sensor_type_ == MeasurementPackage::LASER) {
             // TODO: Initialize state.
             cout << "EKF init LASER" << endl;
             ekf_.x_ << measurement_pack.raw_measurements_[0], measurement_pack.raw_measurements_[1], 0, 0;
+            ekf_.H_ = H_laser_;
+            ekf_.R_ = R_laser_;
         }
 
         // done initializing, no need to predict or update
+        previous_timestamp_ = measurement_pack.timestamp_;
         is_initialized_ = true;
         return;
     }
@@ -143,4 +149,5 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
     // print the output
     cout << "x_ = " << ekf_.x_ << endl;
     cout << "P_ = " << ekf_.P_ << endl;
+    return;
 }

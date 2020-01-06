@@ -46,7 +46,7 @@ private:
     Eigen::MatrixXd Hj_;
 
     // noises
-    float noise_ax, noise_ay;
+    double noise_ax, noise_ay;
 };
 
 #endif // FusionEKF_H_

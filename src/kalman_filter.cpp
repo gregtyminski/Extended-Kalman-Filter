@@ -15,12 +15,12 @@ KalmanFilter::~KalmanFilter() {}
 
 void KalmanFilter::Init(VectorXd &x_in, MatrixXd &P_in, MatrixXd &F_in,
                         MatrixXd &H_in, MatrixXd &R_in, MatrixXd &Q_in) {
-  x_ = x_in;
-  P_ = P_in;
-  F_ = F_in;
-  H_ = H_in;
-  R_ = R_in;
-  Q_ = Q_in;
+    x_ = x_in;
+    P_ = P_in;
+    F_ = F_in;
+    H_ = H_in;
+    R_ = R_in;
+    Q_ = Q_in;
 }
 
 void KalmanFilter::Predict() {
@@ -42,19 +42,19 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
     float vx = x_(2);
     float vy = x_(3);
 
-    float rho = sqrt(px*px + py*py);
+    float rho = sqrt(px * px + py * py);
     float theta = atan2(py, px);
-    float rho_dot = (px*vx + py*vy) / rho;
+    float rho_dot = (px * vx + py * vy) / rho;
 
     VectorXd h = VectorXd(3);
     h << rho, theta, rho_dot;
 
     VectorXd y = z - h;
-    while (y(0) < -M_PI || y(0) > M_PI) {
-        if (y(0) < -M_PI) {
-            y(0) += M_PI;
-        } else if (y(0) > M_PI) {
-            y(0) -= M_PI;
+    while (y(1) < -M_PI || y(1) > M_PI) {
+        if (y(1) < -M_PI) {
+            y(1) += M_PI;
+        } else if (y(1) > M_PI) {
+            y(1) -= M_PI;
         }
     }
     std::cout << "RADAR y=" << y(0) << std::endl;

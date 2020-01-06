@@ -66,6 +66,10 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
         ekf_.x_ << 1, 1, 1, 1;
 
         ekf_.P_ = MatrixXd(4,4);
+        ekf_.P_ << 1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1000, 0,
+                0, 0, 0, 1000;
 
         if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {
             // TODO: Convert radar from polar to cartesian coordinates
@@ -118,10 +122,10 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
     dt_3 = dt_2 * dt;
     dt_4 = dt_3 * dt;
     ekf_.Q_ = MatrixXd(4, 4);
-    ekf_.Q_ << (noise_ax * dt_4 / 4), 0, (noise_ax * dt_3 / 2), 0,
-            0, (noise_ay * dt_4 / 4), 0, (noise_ay * dt_3 / 2),
-            (noise_ax * dt_3 / 2), 0, (noise_ax * dt_2), 0,
-            0, (noise_ay * dt_3 / 2), 0, (noise_ay * dt_2);
+    ekf_.Q_ << (noise_ax * dt_4 / 4),   0,                      (noise_ax * dt_3 / 2),  0,
+                0,                      (noise_ay * dt_4 / 4),  0,                      (noise_ay * dt_3 / 2),
+                (noise_ax * dt_3 / 2),  0,                      (noise_ax * dt_2),      0,
+                0,                      (noise_ay * dt_3 / 2),  0,                      (noise_ay * dt_2);
 
     ekf_.Predict();
 
@@ -135,19 +139,19 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
      * - Update the state and covariance matrices.
      */
     if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {
-        // TODO: Radar updates
+        // Radar updates
         ekf_.H_ = tools.CalculateJacobian(ekf_.x_);
         ekf_.R_ = R_radar_;
         ekf_.UpdateEKF(measurement_pack.raw_measurements_);
     } else {
-        // TODO: Laser updates
+        // Laser updates
         ekf_.H_ = H_laser_;
         ekf_.R_ = R_laser_;
         ekf_.Update(measurement_pack.raw_measurements_);
     }
 
     // print the output
-    cout << "x_ = " << ekf_.x_ << endl;
-    cout << "P_ = " << ekf_.P_ << endl;
+    //cout << "x_ = " << ekf_.x_ << endl;
+    //cout << "P_ = " << ekf_.P_ << endl;
     return;
 }

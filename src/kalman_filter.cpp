@@ -32,6 +32,7 @@ void KalmanFilter::Predict() {
 void KalmanFilter::Update(const VectorXd &z) {
     VectorXd z_pred = H_ * x_;
     VectorXd y = z - z_pred;
+    std::cout << "LASER y=" << y(0) << std::endl;
     CalculateUpdate(y);
 }
 
@@ -51,11 +52,12 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
     VectorXd y = z - h;
     while (y(0) < -M_PI || y(0) > M_PI) {
         if (y(0) < -M_PI) {
-            y(0) += M_2_PI;
+            y(0) += M_PI;
         } else if (y(0) > M_PI) {
-            y(0) -= M_2_PI;
+            y(0) -= M_PI;
         }
     }
+    std::cout << "RADAR y=" << y(0) << std::endl;
     CalculateUpdate(y);
 }
 

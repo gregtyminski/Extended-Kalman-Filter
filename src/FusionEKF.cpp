@@ -33,6 +33,9 @@ FusionEKF::FusionEKF() {
             0, 0.0009, 0,
             0, 0, 0.09;
 
+    H_laser_ << 1, 0, 0, 0,
+            0, 1, 0, 0;
+
     /**
      * TODO: Finish initializing the FusionEKF.
      * TODO: Set the process and measurement noises
@@ -40,6 +43,15 @@ FusionEKF::FusionEKF() {
     ekf_ = KalmanFilter();
     noise_ax = 9;
     noise_ay = 9;
+
+    ekf_.P_ = MatrixXd(4, 4);
+    ekf_.P_ << 1, 0, 0, 0,
+            0, 1, 0, 0,
+            0, 0, 1000, 0,
+            0, 0, 0, 1000;
+
+    ekf_.x_ = VectorXd(4);
+    ekf_.x_ << 1, 1, 1, 1;
 
     tools = Tools();
 }
@@ -62,14 +74,6 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
 
         // first measurement
         cout << "EKF: " << endl;
-        ekf_.x_ = VectorXd(4);
-        ekf_.x_ << 1, 1, 1, 1;
-
-        ekf_.P_ = MatrixXd(4,4);
-        ekf_.P_ << 1, 0, 0, 0,
-                0, 1, 0, 0,
-                0, 0, 1000, 0,
-                0, 0, 0, 1000;
 
         if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {
             // TODO: Convert radar from polar to cartesian coordinates
@@ -122,10 +126,10 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
     dt_3 = dt_2 * dt;
     dt_4 = dt_3 * dt;
     ekf_.Q_ = MatrixXd(4, 4);
-    ekf_.Q_ << (noise_ax * dt_4 / 4),   0,                      (noise_ax * dt_3 / 2),  0,
-                0,                      (noise_ay * dt_4 / 4),  0,                      (noise_ay * dt_3 / 2),
-                (noise_ax * dt_3 / 2),  0,                      (noise_ax * dt_2),      0,
-                0,                      (noise_ay * dt_3 / 2),  0,                      (noise_ay * dt_2);
+    ekf_.Q_ << (noise_ax * dt_4 / 4), 0, (noise_ax * dt_3 / 2), 0,
+            0, (noise_ay * dt_4 / 4), 0, (noise_ay * dt_3 / 2),
+            (noise_ax * dt_3 / 2), 0, (noise_ax * dt_2), 0,
+            0, (noise_ay * dt_3 / 2), 0, (noise_ay * dt_2);
 
     ekf_.Predict();
 

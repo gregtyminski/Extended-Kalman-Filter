@@ -1,6 +1,5 @@
 #include "kalman_filter.h"
 #include <math.h>
-#include <iostream>
 
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
@@ -32,7 +31,6 @@ void KalmanFilter::Predict() {
 void KalmanFilter::Update(const VectorXd &z) {
     VectorXd z_pred = H_ * x_;
     VectorXd y = z - z_pred;
-    std::cout << "LASER y=" << y(0) << std::endl;
     CalculateUpdate(y);
 }
 
@@ -57,7 +55,6 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
             y(1) -= M_PI;
         }
     }
-    std::cout << "RADAR y=" << y(0) << std::endl;
     CalculateUpdate(y);
 }
 

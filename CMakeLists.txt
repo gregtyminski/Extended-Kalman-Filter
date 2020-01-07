@@ -13,10 +13,10 @@ set(sources src/main.cpp src/tools.cpp src/FusionEKF.cpp src/kalman_filter.cpp s
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin") 
 
 include_directories(/usr/local/include)
-include_directories(/usr/local/opt/openssl/include)
+include_directories(/usr/local/opt/openssl\@1.1/include)
 link_directories(/usr/local/lib)
-link_directories(/usr/local/opt/openssl/lib)
-link_directories(/usr/local/Cellar/libuv/1*/lib)
+link_directories(/usr/local/opt/openssl\@1.1/lib)
+link_directories(/usr/local/libuv/lib)
 
 endif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin") 
 
